@@ -4,12 +4,17 @@ use std::fs;
 fn main() {
     let args: Vec<String> = env::args().collect();
 	
-	let query = &args[1];
-	let filepath = &args[2];
+	let (query, filepath) = parse_config(&args);
 
 	let content = fs::read_to_string(filepath).expect("Unable to read the file");
 
 	println!("Searching for {}", query);
 	println!("In the file {}", filepath);
 	println!("With the content {}", content);
+}
+
+fn parse_config(args: &[String]) -> (&str, &str) {
+	let query = &args[1];
+	let filepath = &args[2];
+	(query, filepath)
 }
