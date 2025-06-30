@@ -4,7 +4,13 @@ use std::error::Error;
 pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
 	let content = fs::read_to_string(&config.file_path)?;
 
-	for line in search(&config.query, &content) {
+	let results = if config.ignore_case {
+		search_case_insensitive(&config.query, &content)
+	} else {
+		search(&config.query, &content)
+	};
+
+	for line in results {
 		println!("{line}");
 	}
 
@@ -38,7 +44,8 @@ pub fn search_case_insensitive<'a>(query: &str, contents: &'a str) -> Vec<&'a st
 
 pub struct Config {
 	pub query: String,
-	pub file_path: String
+	pub file_path: String,
+	pub ignore_case: bool
 }
 
 impl Config {
